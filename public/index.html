@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Marriage Biodata Maker – Tamil & English | AI</title>
+  <meta name="description" content="Create a beautiful marriage biodata PDF in Tamil or English in 2 minutes. AI writes the introduction. ₹50 only." />
+  <meta property="og:title" content="Marriage Biodata Maker – Tamil & English" />
+  <meta property="og:description" content="Beautiful biodata PDF in 2 minutes. AI writes the introduction." />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/"><span class="brand-mark">❀</span> <span id="brandName">Kalyana Biodata</span></a>
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button type="button" data-ui-lang="en">English</button>
+      <button type="button" data-ui-lang="ta">தமிழ்</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1 data-i18n="heroTitle"></h1>
+    <p class="hero-sub" data-i18n="heroSub"></p>
+    <ol class="steps">
+      <li><span>1</span><b data-i18n="step1"></b></li>
+      <li><span>2</span><b data-i18n="step2"></b></li>
+      <li><span>3</span><b data-i18n="step3"></b></li>
+    </ol>
+    <p class="privacy-note" data-i18n="privacy"></p>
+  </section>
+
+  <main class="builder">
+    <form id="form" class="form" autocomplete="off" novalidate>
+      <fieldset class="card settings">
+        <legend data-i18n="settings"></legend>
+        <div class="row3">
+          <label><span data-i18n="outLang"></span>
+            <select name="outLang">
+              <option value="ta">தமிழ்</option>
+              <option value="en">English</option>
+            </select>
+          </label>
+          <label><span data-i18n="perspective"></span>
+            <select name="perspective">
+              <option value="family" data-i18n="family"></option>
+              <option value="self" data-i18n="self"></option>
+            </select>
+          </label>
+        </div>
+        <div class="tpl-label" data-i18n="template"></div>
+        <div class="tpl-picker" role="radiogroup">
+          <label class="tpl-card"><input type="radio" name="template" value="traditional" checked /><i class="sw sw-traditional"></i><span data-i18n="tpl_traditional"></span></label>
+          <label class="tpl-card"><input type="radio" name="template" value="floral" /><i class="sw sw-floral"></i><span data-i18n="tpl_floral"></span></label>
+          <label class="tpl-card"><input type="radio" name="template" value="modern" /><i class="sw sw-modern"></i><span data-i18n="tpl_modern"></span></label>
+        </div>
+        <label><span data-i18n="invocation"></span>
+          <input name="invocation" maxlength="60" data-i18n-ph="invocationPh" />
+        </label>
+        <div class="photo-row">
+          <label class="photo-btn"><span data-i18n="photo"></span>
+            <input type="file" id="photoInput" accept="image/*" />
+          </label>
+          <img id="photoThumb" alt="" hidden />
+          <button type="button" id="removePhoto" class="link-btn" data-i18n="removePhoto" hidden></button>
+        </div>
+      </fieldset>
+
+      <div id="sections"></div>
+
+      <div class="form-actions">
+        <button type="button" id="clearBtn" class="link-btn" data-i18n="clear"></button>
+      </div>
+    </form>
+
+    <aside class="preview-col">
+      <div class="preview-head">
+        <h2 data-i18n="preview"></h2>
+        <small data-i18n="previewNote"></small>
+      </div>
+      <div id="previewWrap" class="preview-wrap">
+        <div id="sheet" class="sheet"></div>
+      </div>
+      <div class="pay-box">
+        <button type="button" id="payBtn" class="pay-btn"></button>
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="footer">
+    <nav>
+      <a href="/terms.html" data-i18n="footerTerms"></a>
+      <a href="/privacy.html" data-i18n="footerPrivacy"></a>
+      <a href="/refund.html" data-i18n="footerRefund"></a>
+      <a href="/contact.html" data-i18n="footerContact"></a>
+    </nav>
+    <p>© <span id="year"></span> <span class="site-owner"></span></p>
+  </footer>
+
+  <script src="/js/site-config.js"></script>
+  <script src="/js/i18n.js"></script>
+  <script src="/vendor/html2pdf.bundle.min.js" defer></script>
+  <script src="/js/app.js" defer></script>
+</body>
+</html>

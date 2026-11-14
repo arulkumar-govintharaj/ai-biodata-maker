@@ -1,0 +1,21 @@
+{
+  "name": "ai-biodata-maker",
+  "version": "1.0.0",
+  "description": "AI marriage biodata maker (Tamil & English) on Cloudflare Pages with Razorpay",
+  "scripts": {
+    "dev": "wrangler pages dev",
+    "deploy": "wrangler pages deploy",
+    "vendor": "bash scripts/vendor.sh",
+    "test": "node --test tests/*.test.js"
+  },
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@fontsource/noto-sans-tamil": "^5.3.0",
+    "@fontsource/noto-serif-tamil": "^5.3.0",
+    "@fontsource/poppins": "^5.3.0",
+    "html2pdf.js": "^0.14.0",
+    "wrangler": "^4.162.0"
+  },
+  "private": true,
+  "type": "module"
+}

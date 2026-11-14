@@ -1,0 +1,9 @@
+name = "ai-biodata-maker"
+pages_build_output_dir = "./public"
+compatibility_date = "2026-11-01"
+
+[vars]
+PRICE_PAISE = "5000"          # ₹50
+AI_MODEL = "claude-haiku-5-5"
+# Secrets (set in Cloudflare dashboard or `wrangler pages secret put`, never here):
+#   ANTHROPIC_API_KEY, RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET

@@ -1,0 +1,273 @@
+/* ---------- fonts (self-hosted, see scripts/vendor.sh) ---------- */
+@font-face { font-family: "NSTamil"; font-weight: 400; font-display: swap; src: url(/vendor/fonts/noto-sans-tamil-tamil-400-normal.woff2) format("woff2"); unicode-range: U+0B80-0BFF, U+200C-200D, U+25CC; }
+@font-face { font-family: "NSTamil"; font-weight: 700; font-display: swap; src: url(/vendor/fonts/noto-sans-tamil-tamil-700-normal.woff2) format("woff2"); unicode-range: U+0B80-0BFF, U+200C-200D, U+25CC; }
+@font-face { font-family: "NSTamil"; font-weight: 400; font-display: swap; src: url(/vendor/fonts/noto-sans-tamil-latin-400-normal.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+2000-206F, U+20B9, U+2122; }
+@font-face { font-family: "NSTamil"; font-weight: 700; font-display: swap; src: url(/vendor/fonts/noto-sans-tamil-latin-700-normal.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+2000-206F, U+20B9, U+2122; }
+@font-face { font-family: "NSerifTamil"; font-weight: 400; font-display: swap; src: url(/vendor/fonts/noto-serif-tamil-tamil-400-normal.woff2) format("woff2"); unicode-range: U+0B80-0BFF, U+200C-200D, U+25CC; }
+@font-face { font-family: "NSerifTamil"; font-weight: 700; font-display: swap; src: url(/vendor/fonts/noto-serif-tamil-tamil-700-normal.woff2) format("woff2"); unicode-range: U+0B80-0BFF, U+200C-200D, U+25CC; }
+@font-face { font-family: "NSerifTamil"; font-weight: 400; font-display: swap; src: url(/vendor/fonts/noto-serif-tamil-latin-400-normal.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+2000-206F, U+20B9, U+2122; }
+@font-face { font-family: "NSerifTamil"; font-weight: 700; font-display: swap; src: url(/vendor/fonts/noto-serif-tamil-latin-700-normal.woff2) format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+2000-206F, U+20B9, U+2122; }
+@font-face { font-family: "Poppins"; font-weight: 400; font-display: swap; src: url(/vendor/fonts/poppins-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "Poppins"; font-weight: 600; font-display: swap; src: url(/vendor/fonts/poppins-latin-600-normal.woff2) format("woff2"); }
+
+:root {
+  --maroon: #8b1e3f;
+  --maroon-dark: #6a1530;
+  --gold: #c9a227;
+  --ink: #2b2230;
+  --muted: #6d6470;
+  --bg: #fbf7f2;
+  --card: #ffffff;
+  --line: #eadfd6;
+  --ok: #1d7a46;
+  --err: #b3261e;
+  --warn: #9a6200;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  font-family: "Poppins", "NSTamil", system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+  line-height: 1.5;
+}
+body.ui-ta { font-family: "NSTamil", "Poppins", system-ui, sans-serif; }
+
+/* ---------- top bar & hero ---------- */
+.topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 20px; background: var(--card); border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; z-index: 20;
+}
+.brand { font-weight: 600; font-size: 18px; color: var(--maroon); text-decoration: none; }
+.brand-mark { color: var(--gold); }
+.lang-switch { display: flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+.lang-switch button {
+  border: 0; background: transparent; padding: 6px 14px; cursor: pointer; font: inherit; font-size: 14px; color: var(--muted);
+}
+.lang-switch button.active { background: var(--maroon); color: #fff; }
+
+.hero { max-width: 900px; margin: 0 auto; padding: 36px 20px 12px; text-align: center; }
+.hero h1 { font-size: clamp(26px, 4vw, 40px); line-height: 1.2; margin: 0 0 10px; color: var(--maroon-dark); }
+.hero-sub { color: var(--muted); margin: 0 auto 20px; max-width: 680px; }
+.steps { list-style: none; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; padding: 0; margin: 0 0 14px; }
+.steps li {
+  display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--line);
+  padding: 8px 14px; border-radius: 999px; font-size: 14px;
+}
+.steps span {
+  width: 24px; height: 24px; border-radius: 50%; background: var(--gold); color: #fff;
+  display: grid; place-items: center; font-weight: 600; font-size: 13px;
+}
+.steps b { font-weight: 500; }
+.privacy-note { font-size: 13px; color: var(--ok); margin: 0; }
+
+/* ---------- builder layout ---------- */
+.builder {
+  max-width: 1240px; margin: 0 auto; padding: 20px;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 460px); gap: 24px; align-items: start;
+}
+@media (max-width: 900px) { .builder { grid-template-columns: 1fr; } }
+
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+  padding: 16px 18px 18px; margin: 0 0 16px; min-width: 0;
+}
+.card legend {
+  font-weight: 600; color: var(--maroon); padding: 2px 10px; background: var(--card);
+  border: 1px solid var(--line); border-radius: 999px; font-size: 15px;
+}
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
+.grid2 .span2 { grid-column: 1 / -1; }
+.row3 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; margin-bottom: 10px; }
+@media (max-width: 520px) { .grid2, .row3 { grid-template-columns: 1fr; } }
+.stack { display: grid; gap: 10px; }
+
+label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--muted); }
+input, select, textarea {
+  font: inherit; font-size: 15px; color: var(--ink); background: #fff;
+  border: 1px solid #d9ccc2; border-radius: 9px; padding: 9px 11px; width: 100%;
+}
+textarea { resize: vertical; }
+input:focus, select:focus, textarea:focus { outline: 2px solid color-mix(in srgb, var(--maroon) 35%, transparent); border-color: var(--maroon); }
+
+.tpl-label { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+.tpl-picker { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 12px; }
+.tpl-card {
+  flex-direction: column; align-items: center; gap: 6px; padding: 10px; border: 2px solid var(--line);
+  border-radius: 12px; cursor: pointer; color: var(--ink); font-size: 13px; text-align: center;
+}
+.tpl-card { position: relative; }
+.tpl-card input { position: absolute; opacity: 0; pointer-events: none; }
+.tpl-card:has(input:checked) { border-color: var(--maroon); background: #fff7f9; }
+.tpl-card:has(input:focus-visible) { outline: 2px solid var(--maroon); }
+.sw { display: block; width: 44px; height: 58px; border-radius: 4px; }
+.sw-traditional { background: #fffaf0; border: 3px double var(--gold); box-shadow: inset 0 8px 0 var(--maroon); }
+.sw-floral { background: radial-gradient(circle at 0 0, #f4a7b9 0 12px, transparent 13px), radial-gradient(circle at 100% 100%, #f4a7b9 0 12px, transparent 13px), #fff5f7; border: 1px solid #f0c6d0; }
+.sw-modern { background: linear-gradient(90deg, #1f2a44 0 35%, #fff 35%); border: 1px solid #ccd; }
+
+.photo-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+.photo-btn {
+  display: inline-flex; flex-direction: row; align-items: center; gap: 8px; cursor: pointer;
+  border: 1px dashed var(--maroon); color: var(--maroon); padding: 8px 14px; border-radius: 10px; font-size: 14px;
+}
+.photo-btn input { display: none; }
+#photoThumb { width: 48px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid var(--line); }
+.link-btn { background: none; border: 0; color: var(--maroon); cursor: pointer; font: inherit; font-size: 13px; text-decoration: underline; padding: 4px; }
+.form-actions { text-align: right; }
+
+.ai-btn {
+  justify-self: start; border: 0; cursor: pointer; font: inherit; font-weight: 600; font-size: 15px;
+  padding: 10px 18px; border-radius: 10px; color: #fff;
+  background: linear-gradient(135deg, #7b2ff7, #c2185b);
+}
+.ai-btn:disabled { opacity: .6; cursor: wait; }
+
+/* ---------- preview column ---------- */
+.preview-col { position: sticky; top: 70px; }
+@media (max-width: 900px) { .preview-col { position: static; } }
+.preview-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.preview-head h2 { margin: 0 0 6px; font-size: 18px; color: var(--maroon-dark); }
+.preview-head small { color: var(--muted); }
+.preview-wrap {
+  position: relative; width: 100%; overflow: hidden; border-radius: 6px;
+  box-shadow: 0 6px 28px rgba(60, 20, 30, .15); background: #fff;
+}
+.pay-box { margin-top: 14px; }
+.pay-btn {
+  width: 100%; border: 0; cursor: pointer; font: inherit; font-weight: 600; font-size: 17px;
+  padding: 14px; border-radius: 12px; color: #fff; background: var(--maroon);
+  box-shadow: 0 4px 14px rgba(139, 30, 63, .35);
+}
+.pay-btn:hover:not(:disabled) { background: var(--maroon-dark); }
+.pay-btn:disabled { opacity: .55; cursor: not-allowed; }
+.pay-box.paid .pay-btn { background: var(--ok); box-shadow: none; }
+.status { min-height: 1.4em; font-size: 14px; margin: 8px 0 0; color: var(--muted); }
+.status.ok { color: var(--ok); }
+.status.err { color: var(--err); }
+.status.warn { color: var(--warn); }
+
+.footer { text-align: center; padding: 24px 20px 40px; color: var(--muted); font-size: 13px; }
+.footer nav { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; margin-bottom: 6px; }
+.footer a { color: var(--maroon); }
+
+/* =====================================================================
+   THE BIODATA SHEET (A4 at 96dpi). Everything below is what goes in the PDF.
+   ===================================================================== */
+.sheet {
+  --fs: 15px;
+  position: absolute; top: 0; left: 0;
+  width: 794px; height: 1120px; overflow: hidden;
+  transform-origin: top left; background: #fff; color: #2b2230;
+  font-family: "NSTamil", "Poppins", sans-serif; font-size: var(--fs); line-height: 1.45;
+}
+.sheet .frame { position: absolute; inset: 0; display: flex; flex-direction: column; overflow: hidden; }
+.sheet .deco { display: none; }
+.sheet .invocation { text-align: center; font-weight: 700; letter-spacing: .5px; }
+.sheet .title { text-align: center; font-weight: 700; }
+.sheet .body { flex: 1; min-height: 0; }
+.sheet .photo { object-fit: cover; display: block; }
+.sheet .name { font-weight: 700; }
+.sheet .blk { margin: 0 0 .7em; break-inside: avoid; }
+.sheet .blk h2 { font-size: 1.12em; margin: 0 0 .35em; font-weight: 700; }
+.sheet .blk p { margin: 0; }
+.sheet table { width: 100%; border-collapse: collapse; }
+.sheet th, .sheet td { text-align: left; vertical-align: top; padding: .18em 0; }
+.sheet th { width: 38%; font-weight: 700; padding-right: .6em; }
+.sheet th::after { content: " :"; float: right; }
+.sheet td { padding-left: .6em; }
+.sheet td, .sheet p { overflow-wrap: anywhere; }
+
+.watermark {
+  position: absolute; inset: -40%; transform: rotate(-30deg); z-index: 5; pointer-events: none;
+  display: flex; flex-wrap: wrap; align-content: center; gap: 70px 60px; justify-content: center;
+}
+.watermark span { font: 700 26px "Poppins", sans-serif; color: rgba(0, 0, 0, .10); white-space: nowrap; }
+
+/* ---- Traditional ---- */
+.tpl-traditional { background: #fffaf0; }
+.tpl-traditional .frame {
+  inset: 22px; padding: 26px 40px 22px;
+  border: 6px double #b8860b; outline: 1px solid #b8860b; outline-offset: -14px;
+}
+.tpl-traditional .invocation { color: #8b1e3f; font-family: "NSerifTamil", serif; }
+.tpl-traditional .title {
+  font-family: "NSerifTamil", serif; color: #8b1e3f; font-size: 1.9em; margin: .1em 0 .5em;
+  display: flex; align-items: center; gap: 14px; justify-content: center;
+}
+.tpl-traditional .title::before, .tpl-traditional .title::after { content: "❀"; color: #c9a227; font-size: .7em; }
+.tpl-traditional .head { display: flex; flex-direction: column; align-items: center; margin-bottom: .8em; }
+.tpl-traditional .photo { width: 140px; height: 170px; border: 3px solid #c9a227; border-radius: 8px; margin-bottom: .5em; }
+.tpl-traditional .name { font-size: 1.6em; color: #6a1530; font-family: "NSerifTamil", serif; }
+.tpl-traditional .tagline { color: #7a5c3a; }
+.tpl-traditional .blk h2 { color: #8b1e3f; border-bottom: 1.5px solid #c9a227; padding-bottom: .15em; }
+
+/* ---- Floral ---- */
+.tpl-floral { background: #fff5f7; }
+.tpl-floral .frame { inset: 0; padding: 50px 64px 36px; }
+.tpl-floral .deco {
+  display: block; position: absolute; width: 190px; height: 190px; z-index: 0;
+  background:
+    radial-gradient(circle at 50% 50%, #f7d36b 0 9px, transparent 10px),
+    radial-gradient(circle at 50% 22%, #f4a7b9 0 22px, transparent 23px),
+    radial-gradient(circle at 78% 50%, #f4a7b9 0 22px, transparent 23px),
+    radial-gradient(circle at 50% 78%, #f4a7b9 0 22px, transparent 23px),
+    radial-gradient(circle at 22% 50%, #f4a7b9 0 22px, transparent 23px),
+    radial-gradient(circle at 50% 50%, #fcd9e2 0 80px, transparent 81px);
+  opacity: .8;
+}
+.tpl-floral .deco-tl { top: -70px; left: -70px; }
+.tpl-floral .deco-tr { top: -70px; right: -70px; }
+.tpl-floral .deco-bl { bottom: -70px; left: -70px; }
+.tpl-floral .deco-br { bottom: -70px; right: -70px; }
+.tpl-floral .frame { z-index: 1; }
+.tpl-floral .invocation { color: #b0476a; }
+.tpl-floral .title { font-family: "NSerifTamil", serif; font-style: italic; color: #b0476a; font-size: 2em; margin-bottom: .5em; }
+.tpl-floral .head { display: flex; align-items: center; gap: 22px; margin-bottom: 1em; padding-bottom: .8em; border-bottom: 1px dashed #e6a3b5; }
+.tpl-floral .photo { width: 130px; height: 130px; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 0 0 2px #f4a7b9; }
+.tpl-floral .name { font-size: 1.7em; color: #8a2e4f; }
+.tpl-floral .tagline { color: #9b6b7a; }
+.tpl-floral .blk h2 { color: #b0476a; }
+.tpl-floral .blk h2::before { content: "✿ "; color: #f4a7b9; }
+
+/* ---- Modern ---- */
+.tpl-modern { background: linear-gradient(90deg, #1f2a44 0 250px, #ffffff 250px); }
+.tpl-modern .frame { display: block; }
+.tpl-modern .invocation { position: absolute; top: 18px; left: 250px; right: 0; color: #2a7f7a; font-size: .9em; }
+.tpl-modern .title {
+  position: absolute; top: 40px; left: 280px; right: 36px; text-align: left;
+  font-size: 1.7em; color: #1f2a44; letter-spacing: .5px; border-bottom: 3px solid #2a9d8f; padding-bottom: .2em;
+}
+.tpl-modern .body {
+  position: absolute; inset: 0; display: grid; grid-template-columns: 250px 1fr;
+  grid-template-rows: auto 1fr; grid-template-areas: "head sections" "contact sections";
+}
+.tpl-modern .head { grid-area: head; padding: 44px 22px 10px; color: #fff; text-align: center; }
+.tpl-modern .photo { width: 170px; height: 200px; margin: 0 auto 14px; border-radius: 10px; border: 3px solid #2a9d8f; }
+.tpl-modern .name { font-size: 1.45em; color: #fff; }
+.tpl-modern .tagline { color: #a9c7d8; font-size: .92em; margin-top: .2em; }
+.tpl-modern .contact { grid-area: contact; padding: 10px 22px 30px; color: #e8eef6; }
+.tpl-modern .contact .blk h2 { color: #7fd3c8; border-bottom: 1px solid #3c4a6b; }
+.tpl-modern .contact th { display: block; width: auto; color: #a9c7d8; font-weight: 400; font-size: .85em; padding: .3em 0 0; }
+.tpl-modern .contact th::after { content: ""; }
+.tpl-modern .contact td { display: block; padding: 0 0 .2em; }
+.tpl-modern .contact tr { display: block; }
+.tpl-modern .sections { grid-area: sections; padding: 110px 36px 30px 30px; min-height: 0; overflow: hidden; }
+.tpl-modern .blk h2 { color: #1f2a44; text-transform: uppercase; letter-spacing: .6px; font-size: 1em; }
+.tpl-modern .blk h2::before { content: ""; display: inline-block; width: 10px; height: 10px; background: #2a9d8f; margin-right: 8px; border-radius: 2px; }
+.tpl-modern th { color: #55607a; }
+
+/* In traditional/floral: two-column details, paragraphs full width, contact at the end. */
+.tpl-traditional .body, .tpl-floral .body { display: flex; flex-direction: column; }
+.tpl-traditional .sections, .tpl-floral .sections { display: grid; grid-template-columns: 1fr 1fr; column-gap: 30px; align-items: start; }
+.tpl-traditional .blk.wide, .tpl-floral .blk.wide { grid-column: 1 / -1; }
+.tpl-traditional .sections th, .tpl-floral .sections th { width: 46%; }
+.tpl-traditional .contact th, .tpl-floral .contact th { width: 23%; }
+
+/* ---------- policy pages ---------- */
+.policy { max-width: 760px; margin: 0 auto; padding: 30px 20px; }
+.policy h1 { color: var(--maroon-dark); margin-bottom: 4px; }
+.policy h2 { font-size: 18px; color: var(--maroon); margin-top: 26px; }
+.policy .updated { color: var(--muted); font-size: 13px; margin-top: 0; }
+.contact-table th { text-align: left; padding: 6px 18px 6px 0; color: var(--muted); font-weight: 500; }
