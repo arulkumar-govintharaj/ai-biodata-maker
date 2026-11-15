@@ -1,8 +1,9 @@
-import { DEFAULT_AI_MODEL, HttpError, checkOrigin, clip, errorJson, json, readJson } from "../../src/lib.js";
+import { HttpError, checkOrigin, clip, errorJson, json, readJson } from "../../src/lib.js";
+import { NoAIError, runAI } from "../../src/ai.js";
 
 // POST /api/generate – writes the "About" paragraph with AI.
 // Privacy: the browser sends only the fields below. Phone, address, photo,
-// parents' names and horoscope details never leave the customer's device.
+// parents' names and horoscope details are never sent for this.
 const FIELDS = {
   firstName: 40,
   gender: 10,
@@ -29,12 +30,14 @@ export async function onRequestPost({ request, env }) {
       return errorJson("Add education, occupation or a few words about the person first.", 400);
     }
 
-    if (!env.ANTHROPIC_API_KEY) {
+    try {
+      const about = await writeAbout(env, d, lang, perspective);
+      return json({ ok: true, ai: true, about });
+    } catch (err) {
+      // No AI configured, daily free quota used up, or provider error: still give the customer a paragraph.
+      if (!(err instanceof NoAIError)) console.error("AI about failed, using fallback", err?.message || err);
       return json({ ok: true, ai: false, about: fallbackAbout(d, lang, perspective) });
     }
-
-    const about = await callClaude(env, d, lang, perspective);
-    return json({ ok: true, ai: true, about });
   } catch (err) {
     if (err instanceof HttpError) return errorJson(err.message, err.status);
     console.error(err);
@@ -42,10 +45,12 @@ export async function onRequestPost({ request, env }) {
   }
 }
 
-async function callClaude(env, d, lang, perspective) {
+async function writeAbout(env, d, lang, perspective) {
   const system = [
     'You write the short "About" paragraph for an Indian marriage biodata.',
-    `Write in ${lang === "ta" ? "natural, modern Tamil (Tamil script)" : "simple, warm Indian English"}.`,
+    lang === "ta"
+      ? "Write ONLY in natural, modern, polite Tamil (Tamil script). Translate any English or Tanglish details into Tamil; write personal and place names in Tamil script."
+      : "Write in simple, warm Indian English. Translate any Tamil or Tanglish details into English.",
     perspective === "self"
       ? "Write in first person, as the bride/groom introducing themself."
       : "Write in third person, as the parents introducing their son/daughter.",
@@ -61,33 +66,10 @@ async function callClaude(env, d, lang, perspective) {
     .map(([k, v]) => `${k}: ${v}`)
     .join("\n");
 
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "x-api-key": env.ANTHROPIC_API_KEY,
-      "anthropic-version": "2023-06-01",
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({
-      model: env.AI_MODEL || DEFAULT_AI_MODEL,
-      max_tokens: 500,
-      system,
-      messages: [{ role: "user", content: `<details>\n${lines}\n</details>` }],
-    }),
-  });
-
-  if (!res.ok) {
-    console.error("Anthropic API error", res.status, await res.text());
-    throw new Error("AI request failed");
-  }
-  const data = await res.json();
-  const text = (data.content || [])
-    .filter((b) => b.type === "text")
-    .map((b) => b.text)
-    .join("")
-    .trim();
-  if (!text) throw new Error("Empty AI response");
-  return text.slice(0, 1500);
+  const text = await runAI(env, { system, user: `<details>\n${lines}\n</details>`, maxTokens: 700 });
+  const about = text.replace(/^["“]|["”]$/g, "").trim();
+  if (!about) throw new Error("Empty AI response");
+  return about.slice(0, 1500);
 }
 
 /** Simple non-AI paragraph so the site still works before an API key is added. */

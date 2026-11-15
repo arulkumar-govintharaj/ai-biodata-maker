@@ -9,7 +9,15 @@
   const SHEET_H = 1120; // a few px under A4 height so the PDF never spills to page 2
   const STORE_KEY = "kb_form_v1";
   const UNLOCK_KEY = "kb_unlock_v1";
-  const AI_LIMIT = 6;
+  const AI_LIMIT = 10; // AI calls (write + convert) per browser session
+  // Text answers that "Convert" may change. Phone, dates and dropdowns are never sent.
+  const CONVERT_KEYS = [
+    "invocation", "fullName", "pob", "height", "motherTongue", "religion", "community",
+    "rasi", "nakshatram", "lagnam", "gothram", "dosham",
+    "education", "occupation", "company", "income", "workLocation",
+    "fatherName", "fatherOccupation", "motherName", "motherOccupation", "siblings", "nativePlace",
+    "about", "expectations", "contactPerson", "address",
+  ];
 
   const $ = (s, root = document) => root.querySelector(s);
   const $$ = (s, root = document) => [...root.querySelectorAll(s)];
@@ -24,6 +32,7 @@
     config: { priceRupees: 50, paymentsEnabled: false, freeMode: false, aiEnabled: false },
     aiCount: 0,
     busy: false,
+    undo: null,
   };
 
   // ---------- storage (sessionStorage only: safe on shared/browsing-centre computers) ----------
@@ -115,6 +124,7 @@
     $$("[data-opt]").forEach((o) => (o.textContent = OUT_TEXT[lang][o.dataset.opt]));
     $("#brandName").textContent = lang === "ta" ? SITE.brandTa : SITE.brand;
     updatePayButton();
+    updateConvertButton();
     store.set("kb_ui_lang", lang);
   }
 
@@ -294,6 +304,65 @@
       btn.disabled = false;
       btn.textContent = t("aiBtn");
     }
+  }
+
+  // ---------- convert typed answers to the biodata language ----------
+  function updateConvertButton() {
+    const box = $("#convertBox");
+    if (!box) return;
+    box.hidden = !state.config.aiEnabled;
+    $("#convertBtn").textContent = t(form.outLang.value === "ta" ? "convertTa" : "convertEn");
+    $("#undoConvert").hidden = !state.undo;
+  }
+
+  async function convertAnswers() {
+    if (state.aiCount >= AI_LIMIT) return setStatus(t("aiLimit"), "warn");
+    const d = readForm();
+    const fields = {};
+    for (const k of CONVERT_KEYS) if (d[k]) fields[k] = d[k];
+    if (!Object.keys(fields).length) return setStatus(t("convertEmpty"), "warn");
+
+    const btn = $("#convertBtn");
+    btn.disabled = true;
+    btn.textContent = t("converting");
+    setStatus(t("converting"));
+    try {
+      const res = await fetch("/api/translate", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ to: d.outLang, fields }),
+      });
+      const out = await res.json().catch(() => ({}));
+      if (!res.ok || !out.ok) throw new Error(out.error || "Conversion failed");
+      state.aiCount++;
+      store.set("kb_ai_count", state.aiCount);
+      const changed = Object.entries(out.fields || {}).filter(([k, v]) => form.elements[k] && form.elements[k].value !== v);
+      if (!changed.length) {
+        setStatus(t("convertNone"), "ok");
+        return;
+      }
+      state.undo = {};
+      for (const [k, v] of changed) {
+        state.undo[k] = form.elements[k].value;
+        form.elements[k].value = v;
+      }
+      setStatus(t("convertDone").replace("{n}", changed.length), "ok");
+      render();
+    } catch (e) {
+      setStatus(e.message, "err");
+    } finally {
+      btn.disabled = false;
+      updateConvertButton();
+    }
+  }
+
+  function undoConvert() {
+    if (!state.undo) return;
+    for (const [k, v] of Object.entries(state.undo)) if (form.elements[k]) form.elements[k].value = v;
+    state.undo = null;
+    setStatus(t("undone"), "ok");
+    render();
+    updateConvertButton();
   }
 
   // ---------- payment & PDF ----------
@@ -479,7 +548,10 @@
     $$(".site-owner").forEach((el) => (el.textContent = SITE.brand));
 
     form.addEventListener("input", (e) => {
-      if (e.target.name === "outLang") buildDatalists();
+      if (e.target.name === "outLang") {
+        buildDatalists();
+        updateConvertButton();
+      }
       debounced();
     });
     form.addEventListener("change", debounced);
@@ -493,6 +565,8 @@
       render();
     });
     $("#aiBtn").addEventListener("click", writeWithAI);
+    $("#convertBtn").addEventListener("click", convertAnswers);
+    $("#undoConvert").addEventListener("click", undoConvert);
     $("#clearBtn").addEventListener("click", () => {
       if (!confirm(t("clearConfirm"))) return;
       form.reset();
