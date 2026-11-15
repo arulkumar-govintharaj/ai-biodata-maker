@@ -14,7 +14,7 @@ AI writes the introduction paragraph, the customer pays **₹50 via Razorpay**, 
 - 3 designs: Traditional, Floral, Modern
 - Photo upload (resized in the browser), blessing line, Rasi / Star suggestions
 - "Write with AI" introduction, in first person (self) or third person (parents)
-- **"Convert my answers to Tamil / English"**: one click turns English or Tanglish answers into Tamil script (names transliterated, words translated), with Undo. Phone and dates are never sent.
+- **"Convert to Tamil" / "Convert to English"** buttons at the end of the form: turn English or Tanglish answers into Tamil script (names transliterated, Tanglish written as the same Tamil words, English translated), or the reverse, with Undo. Phone and dates are never sent.
 - Auto-fits all content onto one A4 page
 - Watermarked preview → pay ₹50 → clean PDF
 - After payment, the customer can re-download with small edits for 24 hours (same name only)
@@ -49,13 +49,13 @@ wrangler.toml           Cloudflare config (price, AI model)
 
 ```bash
 npm install
-cp .dev.vars.example .dev.vars   # add keys, or set ALLOW_FREE_DOWNLOAD=true to test without Razorpay
+cp .dev.vars.example .dev.vars   # add keys if you have them
 npm run dev                      # http://localhost:8788
 npm test
 ```
 
 Local dev note: the Workers AI binding (`[ai]` in `wrangler.toml`) always runs on Cloudflare, so `npm run dev` needs `npx wrangler login` first. Without AI, "Write with AI" adds a simple template paragraph and "Convert" is hidden.
-Without Razorpay keys, the pay button stays disabled, unless `ALLOW_FREE_DOWNLOAD=true`. Use that only locally.
+**Without Razorpay keys, the PDF downloads free.** As soon as `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` are added (and the site redeployed), the button becomes "Pay ₹50 & Download PDF".
 
 ## Deploy to Cloudflare Pages (free)
 

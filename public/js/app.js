@@ -306,52 +306,70 @@
     }
   }
 
-  // ---------- convert typed answers to the biodata language ----------
+  // ---------- convert typed answers to Tamil / English ----------
   function updateConvertButton() {
     const box = $("#convertBox");
     if (!box) return;
     box.hidden = !state.config.aiEnabled;
-    $("#convertBtn").textContent = t(form.outLang.value === "ta" ? "convertTa" : "convertEn");
     $("#undoConvert").hidden = !state.undo;
   }
 
-  async function convertAnswers() {
-    if (state.aiCount >= AI_LIMIT) return setStatus(t("aiLimit"), "warn");
+  function convertStatus(msg, kind = "") {
+    const el = $("#convertStatus");
+    el.textContent = msg || "";
+    el.className = `status ${kind}`;
+  }
+
+  async function convertAnswers(to) {
+    if (state.aiCount >= AI_LIMIT) return convertStatus(t("aiLimit"), "warn");
     const d = readForm();
     const fields = {};
     for (const k of CONVERT_KEYS) if (d[k]) fields[k] = d[k];
-    if (!Object.keys(fields).length) return setStatus(t("convertEmpty"), "warn");
+    if (!Object.keys(fields).length) return convertStatus(t("convertEmpty"), "warn");
 
-    const btn = $("#convertBtn");
-    btn.disabled = true;
-    btn.textContent = t("converting");
-    setStatus(t("converting"));
+    const langName = t(to === "ta" ? "langTa" : "langEn");
+    const buttons = $$("[data-convert-to]");
+    const clicked = buttons.find((b) => b.dataset.convertTo === to);
+    buttons.forEach((b) => (b.disabled = true));
+    clicked.textContent = t("converting");
+    convertStatus(t("converting"));
     try {
       const res = await fetch("/api/translate", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ to: d.outLang, fields }),
+        body: JSON.stringify({ to, fields }),
       });
       const out = await res.json().catch(() => ({}));
       if (!res.ok || !out.ok) throw new Error(out.error || "Conversion failed");
       state.aiCount++;
       store.set("kb_ai_count", state.aiCount);
+
+      // Labels on the biodata follow the converted language.
+      const prevLang = form.outLang.value;
+      if (prevLang !== to) {
+        form.outLang.value = to;
+        buildDatalists();
+      }
       const changed = Object.entries(out.fields || {}).filter(([k, v]) => form.elements[k] && form.elements[k].value !== v);
       if (!changed.length) {
-        setStatus(t("convertNone"), "ok");
+        convertStatus(t("convertNone").replace("{lang}", langName), "ok");
+        render();
         return;
       }
-      state.undo = {};
+      state.undo = { outLang: prevLang };
       for (const [k, v] of changed) {
         state.undo[k] = form.elements[k].value;
         form.elements[k].value = v;
       }
-      setStatus(t("convertDone").replace("{n}", changed.length), "ok");
+      convertStatus(t("convertDone").replace("{n}", changed.length).replace("{lang}", langName), "ok");
       render();
     } catch (e) {
-      setStatus(e.message, "err");
+      convertStatus(e.message, "err");
     } finally {
-      btn.disabled = false;
+      buttons.forEach((b) => {
+        b.disabled = false;
+        b.textContent = t(b.dataset.convertTo === "ta" ? "convertTa" : "convertEn");
+      });
       updateConvertButton();
     }
   }
@@ -359,8 +377,9 @@
   function undoConvert() {
     if (!state.undo) return;
     for (const [k, v] of Object.entries(state.undo)) if (form.elements[k]) form.elements[k].value = v;
+    buildDatalists();
     state.undo = null;
-    setStatus(t("undone"), "ok");
+    convertStatus(t("undone"), "ok");
     render();
     updateConvertButton();
   }
@@ -548,10 +567,7 @@
     $$(".site-owner").forEach((el) => (el.textContent = SITE.brand));
 
     form.addEventListener("input", (e) => {
-      if (e.target.name === "outLang") {
-        buildDatalists();
-        updateConvertButton();
-      }
+      if (e.target.name === "outLang") buildDatalists();
       debounced();
     });
     form.addEventListener("change", debounced);
@@ -565,7 +581,7 @@
       render();
     });
     $("#aiBtn").addEventListener("click", writeWithAI);
-    $("#convertBtn").addEventListener("click", convertAnswers);
+    $$("[data-convert-to]").forEach((b) => b.addEventListener("click", () => convertAnswers(b.dataset.convertTo)));
     $("#undoConvert").addEventListener("click", undoConvert);
     $("#clearBtn").addEventListener("click", () => {
       if (!confirm(t("clearConfirm"))) return;

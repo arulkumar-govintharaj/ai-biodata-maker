@@ -47,13 +47,6 @@
             </select>
           </label>
         </div>
-        <div class="convert-box" id="convertBox" hidden>
-          <div class="convert-row">
-            <button type="button" id="convertBtn" class="convert-btn"></button>
-            <button type="button" id="undoConvert" class="link-btn" data-i18n="undo" hidden></button>
-          </div>
-          <small class="hint" data-i18n="convertHint"></small>
-        </div>
         <div class="tpl-label" data-i18n="template"></div>
         <div class="tpl-picker" role="radiogroup">
           <label class="tpl-card"><input type="radio" name="template" value="traditional" checked /><i class="sw sw-traditional"></i><span data-i18n="tpl_traditional"></span></label>
@@ -73,6 +66,17 @@
       </fieldset>
 
       <div id="sections"></div>
+
+      <div class="card convert-box" id="convertBox" hidden>
+        <div class="convert-title" data-i18n="convertTitle"></div>
+        <small class="hint" data-i18n="convertHint"></small>
+        <div class="convert-row">
+          <button type="button" class="convert-btn" data-convert-to="ta" data-i18n="convertTa"></button>
+          <button type="button" class="convert-btn alt" data-convert-to="en" data-i18n="convertEn"></button>
+          <button type="button" id="undoConvert" class="link-btn" data-i18n="undo" hidden></button>
+        </div>
+        <p id="convertStatus" class="status" role="status" aria-live="polite"></p>
+      </div>
 
       <div class="form-actions">
         <button type="button" id="clearBtn" class="link-btn" data-i18n="clear"></button>

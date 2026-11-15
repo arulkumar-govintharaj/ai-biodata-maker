@@ -8,8 +8,8 @@ export async function onRequestGet({ env }) {
     ok: true,
     priceRupees: priceInPaise(env) / 100,
     paymentsEnabled: payments,
-    // Free downloads only when payments are NOT set up and the owner explicitly allows it (local testing).
-    freeMode: !payments && env.ALLOW_FREE_DOWNLOAD === "true",
+    // Until Razorpay keys are added, the PDF downloads free. Adding the keys switches to "Pay & Download".
+    freeMode: !payments,
     aiEnabled: aiAvailable(env),
   });
 }

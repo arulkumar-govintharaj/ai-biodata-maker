@@ -1,6 +1,5 @@
 # Copy to .dev.vars for local testing (never commit .dev.vars)
 ANTHROPIC_API_KEY=
-RAZORPAY_KEY_ID=rzp_test_xxxxxxxxxxxx
+RAZORPAY_KEY_ID=
 RAZORPAY_KEY_SECRET=
-# Set to true ONLY locally, when Razorpay keys are empty, to test PDF download without paying
-ALLOW_FREE_DOWNLOAD=false
+# Leave the Razorpay keys empty and the PDF downloads free (no payment).
